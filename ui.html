@@ -1,17 +1,181 @@
-<h2>Rectangle Creator</h2>
-<p>Count: <input id="count" value="5"></p>
-<button id="create">Create</button>
-<button id="cancel">Cancel</button>
-<script>
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/thomas-lowry/figma-plugin-ds/dist/
+figma-plugin-ds.css"> -->
 
-document.getElementById('create').onclick = () => {
-  const textbox = document.getElementById('count');
-  const count = parseInt(textbox.value, 10);
-  parent.postMessage({ pluginMessage: { type: 'create-rectangles', count } }, '*')
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
 
-document.getElementById('cancel').onclick = () => {
-  parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*')
-}
+  <style>
 
-</script>
+    body
+    {
+      margin: 12px;
+    }
+
+    label
+    {
+      font-size: small;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      color: rgba(0,0,0,0.56);
+    } 
+
+    #input__field
+    {
+        font-size: small;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        
+        width: 100%;
+
+        border-radius: 8px;
+        border: 1px solid rgb(224, 224, 224);
+        
+        padding: 12px;
+
+        margin: 8px 0px 24px 0px;
+        
+        transition: 0.200s;
+    }
+    #input__field:hover
+    {
+      border: 1px solid rgb(177, 174, 174);
+      cursor: pointer;
+    }
+    #input__field:focus
+    {
+      border: 2px solid rgb(82, 110, 211);
+      outline: 0;
+    }
+
+    #pattern_color_selector_action
+    {
+      font-size: small;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      
+      /* height: 44px; */
+      width: 100%;
+
+      border-radius: 8px;
+      border: 1px solid rgb(224, 224, 224);
+      
+      padding: 12px;
+
+      margin: 8px 0px 24px 0px;
+      
+      transition: 0.200s;
+    }
+    #pattern_color_selector_action:hover
+    {
+      border: 1px solid rgb(177, 174, 174);
+      cursor: pointer;
+    }
+    #pattern_color_selector_action:focus
+    {
+      border: 2px solid rgb(82, 110, 211);
+      outline: 0;
+    }
+
+    #make_pattern_checkbox
+    {
+      display: flex;
+      align-items: center;
+      margin-bottom: 24px;
+      cursor: pointer;
+    }
+
+    #make_pattern_checkbox_label
+    {
+      font-size: small;
+    }
+
+    #make_pattern_checkbox_action
+    {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      margin-right: 8px;
+    }
+
+    #make_pattern_checkbox_action:checked
+    {
+      accent-color: rgb(82, 110, 211);
+    }
+
+    #submit_button
+    {
+      position: relative;
+
+      font-size: small;
+      font-weight: 500;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      color: rgb(255, 255, 255);
+
+
+      padding: 8px 12px 8px 32px;
+      border-radius: 8px;
+      border: 1px solid rgb(82, 110, 211);
+      background-color: rgb(82, 110, 211);
+    }
+
+    #submit_button:hover
+    {
+      background-color: rgb(108, 134, 226);
+      border: 1px solid rgb(108, 134, 226);
+      cursor: pointer;
+    }
+
+    #submit_button:focus
+    {
+      background-color: rgb(49, 70, 146);
+      border: 1px solid rgb(49, 70, 146);
+      cursor: pointer;
+    }
+
+    #submit_button::before
+    {
+      content: '';
+      position: absolute;
+      left: 12px;
+      width: 16px;
+      height: 16px;
+      background: url('data:image/svg+xml;utf8,<svg width="16" height="15" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M2.5955 0.0790205C2.60551 -0.0263402 2.72782 -0.0263402 2.73783 0.0790205L2.82173 0.962901C2.93007 2.10423 3.64995 3.00408 4.56301 3.1395L5.27011 3.24438C5.35441 3.25689 5.35441 3.40978 5.27011 3.42229L4.56301 3.52717C3.64995 3.66259 2.93007 4.56244 2.82173 5.70376L2.73783 6.58764C2.72782 6.69301 2.60551 6.69301 2.5955 6.58764L2.5116 5.70376C2.40326 4.56244 1.68338 3.66259 0.770321 3.52717L0.0632164 3.42229C-0.0210721 3.40978 -0.0210721 3.25689 0.0632164 3.24438L0.770321 3.1395C1.68338 3.00408 2.40326 2.10423 2.5116 0.962901L2.5955 0.0790205Z" fill="white"/><path d="M9.83988 1.49137C9.8624 1.28065 10.1376 1.28065 10.1601 1.49137L10.3489 3.25914C10.5927 5.54179 12.2124 7.34149 14.2668 7.61234L15.8577 7.82209C16.0474 7.84712 16.0474 8.15289 15.8577 8.17791L14.2668 8.38766C12.2124 8.65851 10.5927 10.4582 10.3489 12.7408L10.1601 14.5086C10.1376 14.7194 9.8624 14.7194 9.83988 14.5086L9.65111 12.7408C9.40734 10.4582 7.78761 8.65851 5.73322 8.38766L4.14224 8.17791C3.95259 8.15289 3.95259 7.84712 4.14224 7.82209L5.73322 7.61234C7.78761 7.34149 9.40734 5.54179 9.65111 3.25914L9.83988 1.49137Z" fill="white"/></svg>');
+    }
+
+  </style>
+
+</head>
+<body>
+  <div>
+  <form>
+
+    <div id="input_field">
+      <label for id="input_field_label">Запрос</label>
+      <input id="input__field" placeholder="Например, «Нарисуй корги на самокате»"></input>
+    </div>
+    
+    <div id="pattern_color_selector">
+      <label for id="pattern_color_selector_label">Цвет фона</label>
+      <select name="pattern_color_selector_action" id="pattern_color_selector_action">
+        <option name="transparent">Прозрачный</option>
+        <option name="white">Белоснежный</option>
+        <option name="сream-white">Кремовый</option>
+        <option name="bone">Слоновая кость</option>
+      </select>
+    </div>
+
+    <div id="make_pattern_checkbox">
+      <input type="checkbox" id="make_pattern_checkbox_action" name="make_pattern_checkbox_action" 
+      value="Сделать паттерн из  картинки" checked>
+      <label for id="make_pattern_checkbox_label">Сделать паттерн из  картинки</label>
+    </div>
+
+    <div id="button_store">
+      <button class="submit_button" id="submit_button" name="submit_button">Сгенерировать</button>
+    </div>
+
+  </form>
+  </div>
+</body>
+</html>

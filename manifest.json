@@ -12,7 +12,9 @@
   "ui": "ui.html",
   "networkAccess": {
     "allowedDomains": [
-      "none"
+      "https://cdn.jsdelivr.net",
+      "https://rsms.me",
+      "https://images-ext-1.discordapp.net"
     ]
   }
 }
