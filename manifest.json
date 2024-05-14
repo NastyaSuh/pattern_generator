@@ -2,7 +2,7 @@
   "name": "pattern_generator",
   "id": "1367943046402488593",
   "api": "1.0.0",
-  "main": "code.js",
+  "main": "dist/code.js",
   "capabilities": [],
   "enableProposedApi": false,
   "documentAccess": "dynamic-page",
