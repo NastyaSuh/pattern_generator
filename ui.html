@@ -6,7 +6,7 @@ figma-plugin-ds.css"> -->
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <script scr = "src/code.ts"></script>
 
   <style>
 
@@ -176,7 +176,7 @@ figma-plugin-ds.css"> -->
 </head>
 <body>
   <div>
-  <form>
+  <form id="prompt_form">
     <div id="input_field">
       <label for id="input_field_label">Запрос</label>
       <input id="input__field" placeholder="Например, «Нарисуй корги на самокате»"></input>
@@ -207,22 +207,35 @@ figma-plugin-ds.css"> -->
     </div>
 
     <div id="button_store">
-      <button class="submit_button" id="submit_button" name="submit_button">Сгенерировать</button>
+      <button id="submit_button" name="submit_button">Сгенерировать</button>
     </div>
   </form>
   </div>
   <script>
 
-    document.getElementById('submit_button').onclick = () =>
+    document.getElementById('submit_button').onclick = (event) =>
     {
+
+      event.preventDefault();
+
       let prompt = document.getElementById('input__field').value;
       const bgColourSelector = document.querySelector('#pattern_color_selector_action');
       let bgColourItem = bgColourSelector.options[bgColourSelector.selectedIndex].value;
       const eraseBgFlag = document.getElementById('erase_background_checkbox_action').checked;
       const makePatternFlag = document.getElementById('make_pattern_checkbox_action').checked;
-
-      parent.postMessage (
-        {pluginMessage: {prompt, bgColourItem, eraseBgFlag, makePatternFlag}}, '*')
+      
+      if(!prompt)
+      {
+        
+        document.getElementById('input__field').style.borderColor = 'red';
+        document.getElementById('input__field').focus();
+      }
+      else
+      {
+        document.getElementById('input__field').style.borderColor = 'blue';
+        parent.postMessage (
+        {pluginMessage: {prompt, bgColourItem, eraseBgFlag, makePatternFlag}}, '*') 
+      }
     }
   </script>
 </body>
