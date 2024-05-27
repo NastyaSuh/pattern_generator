@@ -39,7 +39,7 @@ figma-plugin-ds.css"> -->
         
         padding: 12px;
 
-        margin: 8px 0px 24px 0px;
+        margin: 8px 0px 12px 0px;
         
         transition: 0.200s;
     }
@@ -71,7 +71,7 @@ figma-plugin-ds.css"> -->
       
       padding: 12px;
 
-      margin: 8px 0px 24px 0px;
+      margin: 8px 0px 12px 0px;
       
       transition: 0.200s;
     }
@@ -80,10 +80,10 @@ figma-plugin-ds.css"> -->
       border: 1px solid rgb(177, 174, 174);
       cursor: pointer;
     }
-    #pattern_color_selector_action:focus
+
+    #pattern_color_selector_action:disabled
     {
-      border: 2px solid rgb(82, 110, 211);
-      outline: 0;
+
     }
 
     #checkbox_block
@@ -181,6 +181,13 @@ figma-plugin-ds.css"> -->
       <label for id="input_field_label">Запрос</label>
       <input id="input__field" placeholder="Например, «Нарисуй корги на самокате»"></input>
     </div>
+
+    <div id="erase_background_checkbox">
+      <input type="checkbox" id="erase_background_checkbox_action" name="erase_background_checkbox_action" 
+      value="Удалить фон у сгенерированной картинки">
+      <label for id="erase_background_checkbox_label">Удалить фон у сгенерированной картинки</label>
+    </div>
+  </div>
     
     <div id="pattern_color_selector">
       <label for id="pattern_color_selector_label">Цвет фона</label>
@@ -198,13 +205,6 @@ figma-plugin-ds.css"> -->
         value="Сделать паттерн из  картинки" checked>
         <label for id="make_pattern_checkbox_label">Сделать паттерн из картинки</label>
       </div>
-  
-      <div id="erase_background_checkbox">
-        <input type="checkbox" id="erase_background_checkbox_action" name="erase_background_checkbox_action" 
-        value="Удалить фон у сгенерированной картинки">
-        <label for id="erase_background_checkbox_label">Удалить фон у сгенерированной картинки</label>
-      </div>
-    </div>
 
     <div id="button_store">
       <button id="submit_button" name="submit_button">Сгенерировать</button>
@@ -212,6 +212,25 @@ figma-plugin-ds.css"> -->
   </form>
   </div>
   <script>
+
+    document.addEventListener('DOMContentLoaded', () => {
+      let eraseBgFlag = document.getElementById('erase_background_checkbox_action');
+      let bgColourSelector = document.querySelector('#pattern_color_selector_action');
+
+      eraseBgFlag.addEventListener('change', ()=>{
+        if(eraseBgFlag.checked)
+        {
+          bgColourSelector.disabled = true;
+          bgColourSelector.style.cursor = 'no-drop';
+        }
+        else
+        {
+          bgColourSelector.disabled = false;
+          bgColourSelector.style.cursor = 'pointer';
+        }
+       });
+    });
+
 
     document.getElementById('submit_button').onclick = (event) =>
     {
@@ -224,15 +243,20 @@ figma-plugin-ds.css"> -->
       const eraseBgFlag = document.getElementById('erase_background_checkbox_action').checked;
       const makePatternFlag = document.getElementById('make_pattern_checkbox_action').checked;
       
+      if(eraseBgFlag)
+      {
+        bgColourItem = null;
+      }
+      
       if(!prompt)
       {
         
-        document.getElementById('input__field').style.borderColor = 'red';
+        document.getElementById('input__field').style.borderColor = 'rgba(221, 76, 30, 1)';
         document.getElementById('input__field').focus();
       }
       else
       {
-        document.getElementById('input__field').style.borderColor = 'blue';
+        document.getElementById('input__field').style.borderColor = 'rgb(224, 224, 224)';
         parent.postMessage (
         {pluginMessage: {prompt, bgColourItem, eraseBgFlag, makePatternFlag}}, '*') 
       }

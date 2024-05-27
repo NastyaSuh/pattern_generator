@@ -16,5 +16,10 @@
       "https://rsms.me",
       "https://images-ext-1.discordapp.net"
     ]
-  }
+  },
+"permissions":[
+      "currentuser",
+     "activeusers",
+      "fileusers"
+    ]
 }
