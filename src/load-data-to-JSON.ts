@@ -41,7 +41,8 @@ export async function loadDataToJSON(prompt: string, background_colour: string, 
     }
 
     jsonData = {
-        id: sessionId.toString() + "+" + image.id.toString(),
+        user_id: sessionId.toString(),
+        image_id: image.id.toString(),
         input: prompt,
         bg_сolor: background_colour,
         is_transparent: flag_erase_background,
