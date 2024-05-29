@@ -1,23 +1,27 @@
-export function postData(data: string, apiURL: string): void
-{
-    // http://127.0.0.1:8000/generate
+import { createFrame } from "./create-frame"
 
-    const requestOptions = {
-        method: "POST",
-        headers: {
+export async function handleData(apiURL: string, data: string)
+{   
+    const options = 
+    {
+        method: 'POST',
+        headers:
+        {
             'Content-Type': 'application/json'
         },
         body: data
+    };
+
+    try
+    {
+        const response = await fetch(apiURL, options);
+        const result = await response.text();
+        const obj = JSON.parse(result);
+        return obj;
+    } 
+    catch (error)
+    {
+        console.error(error);
     }
 
-    fetch(apiURL, requestOptions)
-    .then(response => {
-        if(!response)
-            {
-                throw new Error("Network response is bad");
-            }
-        return response.json
-    })
-    .then(data => {console.log(data)})
-    .catch(console.error);
-}
+  }

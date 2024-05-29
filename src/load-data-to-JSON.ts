@@ -11,38 +11,8 @@ export async function loadDataToJSON(prompt: string, background_colour: string, 
         figma.clientStorage.setAsync("sessionId", sessionId);
     }
 
-    let images = await figma.clientStorage.getAsync("imageItems");
-    let image;
-
-    if(images)
-    {
-        image = {
-            id: images.length + 1,
-            input: prompt,
-            bg_сolor: background_colour,
-            is_transparent: flag_erase_background,
-            is_pattern: flag_make_pattern 
-        }
-        images.push(image);
-        figma.clientStorage.setAsync("imageItems", images);
-    }
-    else
-    {
-        images = [];
-        image = {
-            id: 1,
-            input: prompt,
-            bg_сolor: background_colour,
-            is_transparent: flag_erase_background,
-            is_pattern: flag_make_pattern 
-        }
-        images.push(image);
-        figma.clientStorage.setAsync("imageItems", images);
-    }
-
     jsonData = {
         user_id: sessionId.toString(),
-        image_id: image.id.toString(),
         input: prompt,
         bg_сolor: background_colour,
         is_transparent: flag_erase_background,
@@ -52,4 +22,21 @@ export async function loadDataToJSON(prompt: string, background_colour: string, 
     // console.log(await figma.clientStorage.getAsync("imageItems")); — показ всех сгенерированных изображений
 
     return JSON.stringify(jsonData);
+}
+
+async function loadDataToStorage(prompt: string, background_colour: string, flag_erase_background: any, flag_make_pattern: any, image_id: string)
+{
+    let images = await figma.clientStorage.getAsync("imageItems");
+    let image;
+
+    images = [];
+    image = {
+        id: image_id,
+        input: prompt,
+        bg_сolor: background_colour,
+        is_transparent: flag_erase_background,
+        is_pattern: flag_make_pattern 
+    }
+    images.push(image);
+    figma.clientStorage.setAsync("imageItems", images);
 }

@@ -14,7 +14,9 @@
     "allowedDomains": [
       "https://cdn.jsdelivr.net",
       "https://rsms.me",
-      "https://images-ext-1.discordapp.net"
+      "https://images-ext-1.discordapp.net",
+      "https://any-anime.p.rapidapi.com",
+      "https://res.cloudinary.com"
     ]
   },
 "permissions":[
